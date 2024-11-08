@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.Cookie;
 
 import org.secureauth.sarestapi.data.IPEval;
 import org.secureauth.sarestapi.data.PushAcceptStatus;
@@ -282,7 +282,7 @@ public class SAAccess implements ISAAccess {
                 FactorsQuery.queryFactorsV3(saAuth.getRealm(), userId), ts);
 
         try {
-        	return saExecuter.executeGetRequest(header,
+            return saExecuter.executeGetRequest(header,
                     saBaseURL.getApplianceURL() + FactorsQuery.queryFactorsV3(saAuth.getRealm(), userId), ts,
                     FactorsResponse.class);
         } catch (Exception e) {
@@ -294,7 +294,8 @@ public class SAAccess implements ISAAccess {
 
     /**
      * <p>
-     * Returns the list of Factors available for the specified user supporting special characters
+     * Returns the list of Factors available for the specified user supporting
+     * special characters
      * Used for both /v1/users/factors and /v2/users/factors
      * </p>
      *
@@ -323,7 +324,8 @@ public class SAAccess implements ISAAccess {
 
     /**
      * <p>
-     * Returns the list of Factors available for the specified user supporting special characters
+     * Returns the list of Factors available for the specified user supporting
+     * special characters
      * Used for /v3/users/factors
      * Includes Preferred MFA configured/set by the admin/user.
      * </p>
@@ -340,7 +342,7 @@ public class SAAccess implements ISAAccess {
                 FactorsQuery.queryFactorsQPV3(saAuth.getRealm()), ts);
 
         try {
-        	return saExecuter.executeGetRequest(header,
+            return saExecuter.executeGetRequest(header,
                     saBaseURL.getApplianceURL() + FactorsQuery.queryFactorsQPV3(saAuth.getRealm()), userId, ts,
                     FactorsResponse.class);
         } catch (Exception e) {
@@ -650,13 +652,14 @@ public class SAAccess implements ISAAccess {
     public BaseResponse validateUserPassword(String userId, String password) {
         return validateUserPassword(userId, password, "");
     }
+
     /**
      * <p>
      * Checks the users password against SecureAuth Datastore
      * </p>
      *
-     * @param userId   the userid of the identity
-     * @param password The password of the user to validate
+     * @param userId    the userid of the identity
+     * @param password  The password of the user to validate
      * @param enduserIp the enduser's IP Address
      * @return {@link ResponseObject}
      */
@@ -1217,21 +1220,23 @@ public class SAAccess implements ISAAccess {
 
     /**
      * <p>
-     *     Update user access history
+     * Update user access history
      * </p>
-     * @param userid the user id of the identity
+     * 
+     * @param userid    the user id of the identity
      * @param endUserIP the IP of requesting client
      * @return base response object
      */
-    public ResponseObject updateAccessHistory(String userid, String endUserIP){
+    public ResponseObject updateAccessHistory(String userid, String endUserIP) {
         String ts = getServerTime();
         UpdateUserHistoryRequest req = new UpdateUserHistoryRequest(userid, endUserIP);
-        String uri = saAuth.getRealm() + "/api/"+ Resource.API_VERSION +"/accesshistory";
-        String header = RestApiHeader.getAuthorizationHeader(saAuth,"POST", uri, req,ts);
+        String uri = saAuth.getRealm() + "/api/" + Resource.API_VERSION + "/accesshistory";
+        String header = RestApiHeader.getAuthorizationHeader(saAuth, "POST", uri, req, ts);
 
-        try{
-            return saExecuter.executePostRequest(header,saBaseURL.getApplianceURL() + uri, req, ts, ResponseObject.class);
-        }catch (Exception e){
+        try {
+            return saExecuter.executePostRequest(header, saBaseURL.getApplianceURL() + uri, req, ts,
+                    ResponseObject.class);
+        } catch (Exception e) {
             logger.error("Update user access history error", e);
         }
         return null;
@@ -2090,29 +2095,32 @@ public class SAAccess implements ISAAccess {
 
     /**
      * Validate the yubico OTP token from userId.
+     * 
      * @param userId
      * @param token
-     * @return ResponseObject with status and message. Where "status" is "valid" or "invalid" according the case.
+     * @return ResponseObject with status and message. Where "status" is "valid" or
+     *         "invalid" according the case.
      */
     public ResponseObject validateUserYubicoOTPToken(String userId, String token) {
         AuthRequest authRequest = new AuthRequest();
-        authRequest.setUser_id( userId );
-        authRequest.setType( Resource.YUBIKEY );
-        authRequest.setToken( token );
+        authRequest.setUser_id(userId);
+        authRequest.setType(Resource.YUBIKEY);
+        authRequest.setToken(token);
 
         String uri = this.getAuthUri();
         String serverTime = this.getServerTime();
         ResponseObject response;
         try {
-            String authHeader = RestApiHeader.getAuthorizationHeader( this.saAuth,"POST", uri, authRequest, serverTime );
-            response = this.saExecuter.executePostRequest( authHeader,this.saBaseURL.getApplianceURL() + uri, authRequest, serverTime, ResponseObject.class );
-            if( response == null ) {
-                response = this.buildInvalidResponseObjectWithMessage( "null response.");
+            String authHeader = RestApiHeader.getAuthorizationHeader(this.saAuth, "POST", uri, authRequest, serverTime);
+            response = this.saExecuter.executePostRequest(authHeader, this.saBaseURL.getApplianceURL() + uri,
+                    authRequest, serverTime, ResponseObject.class);
+            if (response == null) {
+                response = this.buildInvalidResponseObjectWithMessage("null response.");
             }
-        } catch (Throwable th){
+        } catch (Throwable th) {
             logger.error("Error validating Yubikey token : ", th);
             // invalid response object.
-            response = this.buildInvalidResponseObjectWithMessage( th.getMessage() );
+            response = this.buildInvalidResponseObjectWithMessage(th.getMessage());
         }
         return response;
     }
@@ -2260,31 +2268,31 @@ public class SAAccess implements ISAAccess {
     }
 
     private String getAuthUri() {
-        return saAuth.getRealm() + "/api/"+ Resource.API_VERSION +"/auth";
+        return saAuth.getRealm() + "/api/" + Resource.API_VERSION + "/auth";
     }
 
     private ResponseObject buildInvalidResponseObjectWithMessage(String message) {
         ResponseObject response = new ResponseObject();
-        response.setStatus( "invalid" );
-        response.setMessage( message );
+        response.setStatus("invalid");
+        response.setMessage(message);
         return response;
     }
 
     public static class UpdateUserHistoryRequest extends AuthRequest {
-    	private String ip_address;
+        private String ip_address;
 
         public UpdateUserHistoryRequest(String userId, String ip) {
-        	this.setUser_id(userId);
-        	ip_address = ip;
+            this.setUser_id(userId);
+            ip_address = ip;
         }
 
-		public String getIp_address() {
-			return ip_address;
-		}
+        public String getIp_address() {
+            return ip_address;
+        }
 
-		public void setIp_address(String ip_address) {
-			this.ip_address = ip_address;
-		}
+        public void setIp_address(String ip_address) {
+            this.ip_address = ip_address;
+        }
     }
 
     /**

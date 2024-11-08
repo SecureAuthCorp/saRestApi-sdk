@@ -16,7 +16,7 @@ This is a community driven project, if you would like to contribute please fork 
 
 Requirements:
 ------------
-* Requires Java 11
+* Requires Java 21
 * Requires gradle to build the package
 
 Dependencies:

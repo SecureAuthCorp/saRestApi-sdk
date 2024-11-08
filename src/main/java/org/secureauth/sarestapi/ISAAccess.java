@@ -11,8 +11,8 @@ import org.secureauth.sarestapi.data.UserProfile.UserToGroups;
 import org.secureauth.sarestapi.data.UserProfile.UsersToGroup;
 import org.secureauth.sarestapi.exception.SARestAPIException;
 
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.NewCookie;
 import java.util.Hashtable;
 
 public interface ISAAccess {
@@ -224,13 +224,12 @@ public interface ISAAccess {
 	 * Checks the users password against SecureAuth Datastore
 	 * </p>
 	 *
-	 * @param userId   the userid of the identity
-	 * @param password The password of the user to validate
+	 * @param userId    the userid of the identity
+	 * @param password  The password of the user to validate
 	 * @param enduserIp the enduser's ip address
 	 * @return {@link ResponseObject}
 	 */
 	BaseResponse validateUserPassword(String userId, String password, String enduserIp) throws SARestAPIException;
-
 
 	/**
 	 * <p>
