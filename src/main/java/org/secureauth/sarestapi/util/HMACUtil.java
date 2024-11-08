@@ -1,9 +1,6 @@
 package org.secureauth.sarestapi.util;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import javax.crypto.Mac;
@@ -34,9 +31,8 @@ public final class HMACUtil {
 
     public static byte[] encode(String secret, String data) throws Exception {
         // get the bytes of the hmac key and data string
-        byte[] secretByte = new Hex(StandardCharsets.UTF_8).decode(secret.getBytes(StandardCharsets.UTF_8));
+        byte[] secretByte = secret.getBytes(StandardCharsets.UTF_8);
         byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
-
         SecretKeySpec secretKey = new SecretKeySpec(secretByte, "HmacSHA256");
         Mac mac = Mac.getInstance("HmacSHA256");
         mac.init(secretKey);
