@@ -1,5 +1,6 @@
 package org.secureauth.sarestapi.util;
 
+import org.apache.hc.client5.http.utils.Hex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.secureauth.sarestapi.data.Requests.StatusRequest;
@@ -16,7 +17,7 @@ class RestApiHeaderTest {
 
 	private final static String realm = "realm1";
 	private final static String applicationID = "applicationID";
-	private final static String applicationKey = "applicationKey";
+	private final static String applicationKey = Hex.encodeHexString("applicationKey".getBytes());
 	private static SAAuth saAuth;
 
 	@BeforeEach
@@ -25,12 +26,22 @@ class RestApiHeaderTest {
 	}
 
 	@Test
+	void getAuthorizationHeaderWithoutEncodingKey() {
+		String query = StatusQuery.queryStatus(saAuth.getRealm(), "userId");
+		saAuth.setApplicationKey("applicationKey");
+
+		String header = RestApiHeader.getAuthorizationHeader(saAuth, Resource.METHOD_GET, query, getServerTime());
+
+		assertEquals("Basic YXBwbGljYXRpb25JRDo=", header);
+	}
+
+	@Test
 	void getAuthorizationHeaderWithoutPayload() {
 		String query = StatusQuery.queryStatus(saAuth.getRealm(), "userId");
 
 		String header = RestApiHeader.getAuthorizationHeader(saAuth, Resource.METHOD_GET, query, getServerTime());
 
-		assertEquals(header, "Basic YXBwbGljYXRpb25JRDo=");
+		assertEquals("Basic YXBwbGljYXRpb25JRDpoSE9hMk1vS1F2ckVXc0tNZkRueE5OM2J2VHU5N1BsS3FFS3JKczZFZDFFPQ==", header);
 	}
 
 	@Test
@@ -41,7 +52,7 @@ class RestApiHeaderTest {
 
 		String header = RestApiHeader.getAuthorizationHeader(saAuth, Resource.METHOD_POST, query, statusRequest, getServerTime());
 
-		assertEquals(header, "Basic YXBwbGljYXRpb25JRDo=");
+		assertEquals("Basic YXBwbGljYXRpb25JRDphWDBCbitNVXIvMmNtRGJxTVdnRjNuZ0JRWW5QcHNkR3pEanYrTUh1aUhBPQ==", header);
 	}
 
 
