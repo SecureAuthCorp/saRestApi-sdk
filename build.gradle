@@ -85,7 +85,7 @@ distributions {
 //}
 
 //build.dependsOn( copyToLib )
-build.dependsOn( javadoc )
+// build.dependsOn( javadoc )
 //generate_zip.finalizedBy( build )
 
 test {
