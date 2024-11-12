@@ -21,7 +21,8 @@ jobs:
         run: ./gradlew test
       # Might want to remove this step
       - name: Archive production artifacts ⬆️
-        if: ${{ github.event_name == 'pull_request' && github.pull_request_target == 'master' }}
+      # Changed from target 'master' to 'develop' because the rules for the repo are locking my uploads
+        if: ${{ github.event_name == 'pull_request' && github.pull_request_target == 'develop' }}
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
