@@ -46,13 +46,13 @@ class RestApiHeaderTest {
 
 	@Test
 	void testGetAuthorizationHeaderWithPayload() {
-		StatusRequest statusRequest = new StatusRequest("some status");
+		StatusRequest statusRequest = new StatusRequest("someStatus");
 
 		String query = StatusQuery.queryStatus(saAuth.getRealm(), "userId");
 
 		String header = RestApiHeader.getAuthorizationHeader(saAuth, Resource.METHOD_POST, query, statusRequest, getServerTime());
 
-		assertEquals("Basic YXBwbGljYXRpb25JRDphWDBCbitNVXIvMmNtRGJxTVdnRjNuZ0JRWW5QcHNkR3pEanYrTUh1aUhBPQ==", header);
+		assertEquals("Basic YXBwbGljYXRpb25JRDpnMkxoalVVdmV5Nk9zUDRlcERTUy9RVEJteDBxdDV0MFhLOWF1YTNuK3BBPQ==", header);
 	}
 
 
