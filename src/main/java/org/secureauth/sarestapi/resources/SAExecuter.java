@@ -8,6 +8,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.util.Optional;
 
 import javax.net.ssl.*;
@@ -154,7 +155,7 @@ public class SAExecuter {
                     .build();
             client.property(ClientProperties.CONNECT_TIMEOUT, this.idpApiTimeout);
             client.property(ClientProperties.READ_TIMEOUT, this.idpApiTimeout);
-        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException | CertificateException e) {
             logger.error("Exception occurred while attempting to associating our SSL cert to the session: "
                     + e.getMessage());
             throw new SARestAPIException("Unable to create connection object, creation attempt returned NULL.", e);

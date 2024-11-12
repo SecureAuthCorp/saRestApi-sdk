@@ -17,7 +17,7 @@ public final class SATrustManagerFactory {
 
     private static final String PKIX_ALGORITHM = "PKIX";
 
-    public static TrustManager[] createTrustsManagersFor(SABaseURL saBaseURL) throws NoSuchAlgorithmException, KeyStoreException {
+    public static TrustManager[] createTrustsManagersFor(SABaseURL saBaseURL) throws NoSuchAlgorithmException, KeyStoreException, CertificateException {
         if( saBaseURL.isSelfSigned() ) {
             // disabled impl.
             return new TrustManager[]{
