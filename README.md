@@ -21,12 +21,12 @@ Requirements:
 
 Dependencies:
 ------------
-* jackson-jaxrs-json-provider 2.7.3
-* jersey-client 2.5.1
-* Commons Codec 1.10
-* SLF4J 1.7.28
-* jaxb 2.3.0
-* junit 5.1.0
+* jackson-jaxrs-json-provider 2.18.1
+* jersey-client 4.0.0-M1
+* Commons Codec 1.17.1
+* SLF4J 2.0.16
+* jaxb 4.0.5
+* junit 4.13.2
 
 Building:
 --------
