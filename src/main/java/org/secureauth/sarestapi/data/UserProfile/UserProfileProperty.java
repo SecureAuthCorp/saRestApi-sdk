@@ -1,11 +1,13 @@
 package org.secureauth.sarestapi.data.UserProfile;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Created by rrowcliffe on 5/1/16.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProfileProperty {
     private String value;
     private String isWritable;
