@@ -1,5 +1,6 @@
 package org.secureauth.sarestapi.data.Response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.secureauth.sarestapi.data.Response.BaseResponse;
 import org.secureauth.sarestapi.data.UserProfile.*;
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 @XmlRootElement
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProfileResponse extends BaseResponse{
     private String userId;
     private Map<String,UserProfileProperty> properties = new HashMap<>();
