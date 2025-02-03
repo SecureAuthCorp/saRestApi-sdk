@@ -63,8 +63,8 @@ public class SAAccessUnitTest {
                 false,
                 true,
                 "Realm01",
-                "Realm01-ApplicationId",
-                "Realm01-ApplicationKey",
+                "971e6dea94f443ee932f0a3447672aea",
+                "19d4364f56975fed0f58716b78693922507de3d37fdb8784edba5c29af2416fd",
                 transactionId
         );
     }
