@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.secureauth.sarestapi.data.Requests.StatusRequest;
 import org.secureauth.sarestapi.data.SAAuth;
+import org.secureauth.sarestapi.exception.SARestAPIException;
 import org.secureauth.sarestapi.queries.StatusQuery;
 import org.secureauth.sarestapi.resources.Resource;
 
@@ -25,15 +26,15 @@ class RestApiHeaderTest {
 		saAuth = new SAAuth(applicationID,applicationKey,realm);
 	}
 
-	// Maybe could change this to check throws DecoderException and Throw the exception instead of logging
 	@Test
 	void getAuthorizationHeaderWithoutEncodingKey() {
 		String query = StatusQuery.queryStatus(saAuth.getRealm(), "userId");
 		saAuth.setApplicationKey("applicationKey");
 
-		String header = RestApiHeader.getAuthorizationHeader(saAuth, Resource.METHOD_GET, query, getServerTime());
-
-		assertEquals("Basic YXBwbGljYXRpb25JRDo=", header);
+		assertThrows(SARestAPIException.class, () -> {
+			String header = RestApiHeader.getAuthorizationHeader(saAuth, Resource.METHOD_GET, query, getServerTime());
+			assertEquals("Basic YXBwbGljYXRpb25JRDo=", header);
+		});
 	}
 
 	@Test
