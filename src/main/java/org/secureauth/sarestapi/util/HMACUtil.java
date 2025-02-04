@@ -1,5 +1,6 @@
 package org.secureauth.sarestapi.util;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
@@ -50,6 +51,8 @@ public final class HMACUtil {
 
     public static byte[] encode(String secret, String data) throws Exception {
         // get the bytes of the hmac key and data string
+        if(!secret.matches("^[0-9a-fA-F]+$"))
+            throw new DecoderException(String.format("Secret '%s' is not a valid hex string", secret));
         byte[] secretByte = new Hex(StandardCharsets.UTF_8).decode(secret.getBytes(StandardCharsets.UTF_8));
         byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
         SecretKeySpec secretKey = new SecretKeySpec(secretByte, "HmacSHA256");

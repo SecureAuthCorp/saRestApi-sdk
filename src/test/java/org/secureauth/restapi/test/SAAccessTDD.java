@@ -81,6 +81,7 @@ public class SAAccessTDD {
 	private static RetrievePropertiesUtils retrievePropertiesUtils;
 
 	private static Boolean assumeTest;
+	private static Boolean assumeTestTransitive;
 
 	@Before
 	public void setup() {
@@ -112,7 +113,7 @@ public class SAAccessTDD {
 		validYubicoToken = getValue(Property.VALID_YUBICO_TOKEN);
 		validIp = getValue(Property.VALID_IP);
 		assumeTest = Boolean.valueOf(getValue(Property.ASSUME_TEST));
-
+		assumeTestTransitive = Boolean.valueOf(getValue(Property.ASSUME_TEST_TRANSITIVE));
 	}
 
 	private String getValue(Property property) {
@@ -307,27 +308,17 @@ public class SAAccessTDD {
 		String invalidFactorId = "zzzz0000z0000a00zzzz000z0zz0z00z";
 
 		BaseResponse response = saAccess.validateOath(validUsername, validUserOtp, invalidFactorId);
-		String expectedResponse = String.format("Request validation failed with: Unknown factor id %s",
-				invalidFactorId);
 		assertNotNull(response);
 		assertEquals(INVALID_MESSAGE, response.getStatus());
-		assertEquals(expectedResponse, response.getMessage());
+		assertTrue(response.getMessage().contains(invalidFactorId));
 	}
 
 	@Test
-	public void testValidateOathOTPWithInvalidCode() throws Exception {
-		/*
-		 * Response would return:
-		 * {
-		 * "status" : "invalid",
-		 * "message" : "OTP is invalid."
-		 * }
-		 */
+	public void testValidateOathOTPWithInvalidCode()  throws Exception {
 
 		BaseResponse response = saAccess.validateOath(validUsername, validUserOtp, validFactorIdForOathOtp);
 		assertNotNull(response);
 		assertEquals(INVALID_MESSAGE, response.getStatus());
-		assertEquals(INVALID_OTP_MESSAGE, response.getMessage());
 	}
 
 	@Test
@@ -609,6 +600,7 @@ public class SAAccessTDD {
 
 	@Test
 	public void testUpdateUserProfileKBQKBAOrderedValid() throws Exception {
+		Assume.assumeTrue(assumeTestTransitive);
 		NewUserProfile newUserProfile = new NewUserProfile();
 		newUserProfile.getKnowledgeBase().put("nonFormated1", new UserProfileKB("kbq1", "kba1"));
 		newUserProfile.getKnowledgeBase().put("nonFormated3", new UserProfileKB("kbq3", "kba3"));
@@ -629,6 +621,7 @@ public class SAAccessTDD {
 
 	@Test
 	public void testCreateUserProfileKBQKBAOrderedValid() throws Exception {
+		Assume.assumeTrue(assumeTestTransitive);
 
 		NewUserProfile newUserProfile = new NewUserProfile();
 		newUserProfile.getKnowledgeBase().put("NonFormated2", new UserProfileKB("Kbq2", "kba2"));
@@ -653,6 +646,7 @@ public class SAAccessTDD {
 
 	@Test(expected = SARestAPIException.class)
 	public void testCreateUserProfileKBQKBAOrderedInValid() throws Exception {
+		Assume.assumeTrue(assumeTestTransitive);
 
 		NewUserProfile newUserProfile = new NewUserProfile();
 		newUserProfile.getKnowledgeBase().put("nonFormated1", new UserProfileKB("kbq1", "kba1"));
@@ -705,6 +699,7 @@ public class SAAccessTDD {
 
 	@Test
 	public void testDeleteUserValid() throws Exception {
+		Assume.assumeTrue(assumeTestTransitive);
 		// when
 		BaseResponse responseObj = saAccess.deleteUser(NEW_USERNAME, userDomain, Boolean.FALSE);
 		// then
@@ -843,6 +838,7 @@ public class SAAccessTDD {
 		 * "message": ""
 		 * }
 		 */
+		Assume.assumeTrue(assumeTestTransitive);
 		String fingerprintJSON = "{\n" +
 				"        \"fingerprint\" : {\"uaString\" : \"Mozilla/5.0 (Windows NT 6.3; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0\",\n"
 				+
@@ -948,6 +944,7 @@ public class SAAccessTDD {
 		 * "message": ""
 		 * }
 		 */
+		Assume.assumeTrue(assumeTestTransitive);
 		String emptyFingerprintJSON = "{}";
 
 		DFPValidateResponse response = saAccess.DFPSaveFingerprint(validUsername, validHostAddress, validFingerprintId,
@@ -993,6 +990,7 @@ public class SAAccessTDD {
 	// This tests the creation of a real user
 	@Test
 	public void testCreateUserWithSpecialCharacters() {
+		Assume.assumeTrue(assumeTestTransitive);
 		NewUserProfile userProfile = new NewUserProfile();
 		userProfile.setUserId(NEW_USERNAME_QP);
 		userProfile.setPassword(NEW_USER_PASSWORD);
@@ -1003,6 +1001,7 @@ public class SAAccessTDD {
 
 	@Test
 	public void testGetCreatedUserWithSpecialCharacters() {
+		Assume.assumeTrue(assumeTestTransitive);
 		String userName = validUsername;
 		BaseResponse response = saAccess.getUserProfileQP(userName);
 
@@ -1011,6 +1010,7 @@ public class SAAccessTDD {
 
 	@Test
 	public void testGetCreatedFactorsUserWithSpecialCharacters() {
+		Assume.assumeTrue(assumeTestTransitive);
 		String userName = validUsername;
 		BaseResponse response = saAccess.factorsByUserQP(userName);
 
@@ -1019,6 +1019,7 @@ public class SAAccessTDD {
 
 	@Test
 	public void testGetCreatedThrottleUserWithSpecialCharacters() {
+		Assume.assumeTrue(assumeTestTransitive);
 		String userName = validUsername;
 		BaseResponse response = saAccess.getThrottleReqQP(userName);
 

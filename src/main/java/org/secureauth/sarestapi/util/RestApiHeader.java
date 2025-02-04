@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.codec.binary.Base64;
 import org.secureauth.sarestapi.data.*;
+import org.secureauth.sarestapi.exception.SARestAPIException;
 import org.secureauth.sarestapi.resources.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,61 +53,51 @@ public final class RestApiHeader {
 
     // Payload in header
     public static String getAuthorizationHeader(SAAuth saAuth, String requestMethod, String uriPath, Object object,
-            String ts) {
+            String ts) throws SARestAPIException {
 
         // Build our string for the AuthHeader
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(requestMethod).append("\n")
                 .append(ts).append("\n")
                 .append(saAuth.getApplicationID()).append("\n")
-                .append(Resource.SLASH + uriPath).append("\n")
+                .append(Resource.SLASH).append(uriPath).append("\n")
                 .append(JSONUtil.convertObjectToJSON(object));
 
         String authHeader = "";
         // Create a SHA256 Hash
-        String base64Sha = "";
-        try {
-            base64Sha = new String(
-                    Base64.encodeBase64(HMACUtil.encode(saAuth.getApplicationKey(), stringBuilder.toString())));
-        } catch (Exception e) {
-            logger.error("Exception occurred while generating Authorization Header\n" + e.getMessage() + "\n", e);
-        }
-
-        String appId = saAuth.getApplicationID() + ":" + base64Sha;
-        logger.trace("Auth Header before second encoding  " + appId + "\n");
-        try {
-            authHeader = "Basic " + Base64.encodeBase64String(appId.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException uee) {
-            logger.error("Exception Encoding\n" + uee.getMessage() + "\n", uee);
-        }
+        String appId = encodeAppId(saAuth.getApplicationKey(), saAuth.getApplicationID(), stringBuilder.toString());
+        authHeader = "Basic " + Base64.encodeBase64String(appId.getBytes(StandardCharsets.UTF_8));
 
         return authHeader;
     }
 
     // No Payload in header
-    public static String getAuthorizationHeader(SAAuth saAuth, String requestMethod, String uriPath, String ts) {
+    public static String getAuthorizationHeader(SAAuth saAuth, String requestMethod, String uriPath, String ts) throws SARestAPIException {
         // Build our string for the AuthHeader
+        String authHeader = "";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(requestMethod).append("\n")
                 .append(ts).append("\n")
                 .append(saAuth.getApplicationID()).append("\n")
-                .append(Resource.SLASH + uriPath);
+                .append(Resource.SLASH).append(uriPath);
 
-        String authHeader = "";
-        // Create a SHA256 Hash
-        String base64Sha = "";
-        try {
-            base64Sha = new String(
-                    Base64.encodeBase64(HMACUtil.encode(saAuth.getApplicationKey(), stringBuilder.toString())));
-        } catch (Exception e) {
-            logger.error("Exception occurred while generating Authorization Header\n" + e.getMessage() + "\n", e);
-        }
-
-        String appId = saAuth.getApplicationID() + ":" + base64Sha;
-        logger.trace("Auth Header before second encoding  " + appId + "\n");
+        String appId = encodeAppId(saAuth.getApplicationKey(), saAuth.getApplicationID(), stringBuilder.toString());
         authHeader = "Basic " + Base64.encodeBase64String(appId.getBytes(StandardCharsets.UTF_8));
 
         return authHeader;
+    }
+
+    private static String encodeAppId(String applicationKey, String applicationID, String data) throws SARestAPIException {
+
+        try {
+            // Create a SHA256 Hash
+            String base64Sha = new String(Base64.encodeBase64(HMACUtil.encode(applicationKey, data)));
+            String appId = applicationID + ":" + base64Sha;
+            logger.trace("Auth Header before second encoding  " + appId + "\n");
+            return appId;
+        } catch (Exception e) {
+            throw new SARestAPIException("Exception occurred while generating Authorization Header", e);
+        }
     }
 
 }

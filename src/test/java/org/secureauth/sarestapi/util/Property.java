@@ -20,7 +20,8 @@ public enum Property {
 	VALID_FINGERPRINT_ID("valid.fingerprint.id"),
 	VALID_YUBICO_TOKEN("valid.yubico.token"),
 	VALID_IP("user.ip"),
-	ASSUME_TEST("assume.test");
+	ASSUME_TEST("assume.test"),
+	ASSUME_TEST_TRANSITIVE("assume.test.transitive");
 
 	private final String value;
 
